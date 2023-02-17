@@ -67,16 +67,20 @@ class RoutineNotificationApp(App):
             alarm_time = datetime.datetime.combine(datetime.date.today(), routine["time"]) # Create a datetime object with today's date and the specified time
             Clock.schedule_once(lambda dt: self.show_notification(routine), (alarm_time - datetime.datetime.now()).total_seconds()) # Schedule the notification to be shown at the specified time
             now = datetime.datetime.now().time()   # Geting the routine details for today
-            if now == routine["time"]:
-                notification.notify(
-                    title=routine["title"],
-                    message=routine["message"],
-                    timeout=5
-                )
-                self.notification_label.text = routine['message']
+            if now >= routine["time"]:
+                self.show_notification(routine)
             else:
                 self.notification_label.text = "It's not yet time."
+                
+    def show_notification(self, routine):
+        notification.notify(
+            title=routine["title"],
+            message=routine["message"],
+            timeout=5
+        )
+        self.notification_label.text = routine["message"]
     
     
 if __name__ == '__main__':
     RoutineNotificationApp().run()
+    
